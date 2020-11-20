@@ -2,16 +2,7 @@ name: Test, Build and Upload microsService
 
 on:
   push:
-    branches:
-      - master
-  workflow_dispatch:
-    inputs:
-      logLevel:
-        description: 'Log level'
-        required: true
-        default: 'warning'
-      tags:
-        description: 'Test scenario tags'
+    branches: [ main ]
 
 jobs:
   compile:
@@ -22,7 +13,6 @@ jobs:
     name: Java ${{ matrix.java }} compile
     steps:
       - uses: actions/checkout@master
-
       - name: Setup java
         uses: actions/setup-java@v1
         with:
@@ -42,19 +32,13 @@ jobs:
         with:
           java-version: 8
 
-      - name: Test and build project
+      - name: Maven clean and istall project
         run: mvn -f pom.xml clean install -Dmaven.test.skip=true
-
-      - name: Show contents of the current working directory
-        run: ls -la
-
-      - name: Show contents of the target directory
-        run: ls -la target
 
       - name: Upload Maven build artifact
         uses: actions/upload-artifact@v1
         with:
-          name: users-artifact.jar
+          name: Build jar file
           path: ./target/demo-0.0.1-SNAPSHOT.jar
 
       - name: Docker login
