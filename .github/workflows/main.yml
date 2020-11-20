@@ -37,9 +37,9 @@ jobs:
         run: mvn -f pom.xml clean install -Dmaven.test.skip=true
 
       - name: Start MongoDB
-          uses: supercharge/mongodb-github-action@1.3.0
-          with:
-            mongodb-version: ${{ matrix.mongodb-version }}
+        uses: supercharge/mongodb-github-action@1.3.0
+        with:
+          mongodb-version: ${{ matrix.mongodb-version }}
 
       - name: Upload Maven build artifact
         uses: actions/upload-artifact@v1
