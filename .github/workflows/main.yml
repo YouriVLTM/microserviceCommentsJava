@@ -2,8 +2,7 @@ name: Test, Build and Upload microsService
 
 on:
   push:
-    branches:
-      - master
+    branches: [ master ]
 
 jobs:
   compile:
