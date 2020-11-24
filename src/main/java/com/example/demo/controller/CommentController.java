@@ -23,7 +23,7 @@ public class CommentController {
 
     @GetMapping("/comments/{key}")
     public Comment getComment(@PathVariable String key)    {
-        return commentRepository.findByKey(key).get(0);
+        return commentRepository.findByKey(key);
     }
 
     @PostMapping("/comments")
@@ -39,20 +39,25 @@ public class CommentController {
     @PutMapping("/comments")
     public Comment updateComment(@RequestBody Comment updateComment)
     {
-        Comment comment = commentRepository.findByKey(updateComment.getKey()).get(0);
-        comment.setTitle(updateComment.getTitle());
-        comment.setDescription(updateComment.getDescription());
-        comment.setUserEmail(updateComment.getUserEmail());
-        comment.setImageKey(updateComment.getImageKey());
-        comment.setUpdateDate(new Date(System.currentTimeMillis()));
-        commentRepository.save(comment);
-        return comment;
+        Comment comment = commentRepository.findByKey(updateComment.getKey());
+        if(comment != null){
+            comment.setTitle(updateComment.getTitle());
+            comment.setDescription(updateComment.getDescription());
+            comment.setUserEmail(updateComment.getUserEmail());
+            comment.setImageKey(updateComment.getImageKey());
+            comment.setUpdateDate(new Date(System.currentTimeMillis()));
+            commentRepository.save(comment);
+            return comment;
+        }else{
+            return null;
+        }
+
     }
 
     @DeleteMapping("/comments/{key}")
     public ResponseEntity<Object> deleteComment(@PathVariable String key)
     {
-        Comment comment = commentRepository.findByKey(key).get(0);
+        Comment comment = commentRepository.findByKey(key);
         if(comment != null){
             commentRepository.delete(comment);
             return ResponseEntity.ok().build();

@@ -6,10 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,14 +32,14 @@ public class CommentControllerIntegrationTest {
 
 
     private Comment comment1 = new Comment(
-            "Wie",
+            "Comment1",
             "Dat is mooi.",
             "youri@hotmail.com",
             "test.png"
     );
 
     private Comment comment2 = new Comment(
-            "test",
+            "Comment2",
             "hallo ik ben youri",
             "lorenzo@hotmail.com",
             "urlimage"
@@ -102,7 +99,7 @@ public class CommentControllerIntegrationTest {
         mockMvc.perform(get("/comments/{key}", this.comment1.getKey()))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title", is("Wie")))
+                .andExpect(jsonPath("$.title", is("Comment1")))
                 .andExpect(jsonPath("$.description", is("Dat is mooi.")))
                 .andExpect(jsonPath("$.userEmail", is("youri@hotmail.com")));
     }
@@ -128,16 +125,13 @@ public class CommentControllerIntegrationTest {
 
     @Test
     public void giveComment_whenPutComment_thenReturnJsonComment() throws Exception {
-       /* Comment updatedComment = new Comment( "PutTitle",
-                "this is a put Title",
-                "put@hotmail.com",
-                "put.png");*/
+
         comment2.setTitle("PutTitle");
         comment2.setDescription("this is a put Title");
         comment2.setUserEmail("put@hotmail.com");
         comment2.setImageKey("put.png");
 
-        mockMvc.perform(put("/commants")
+        mockMvc.perform(put("/comments")
                 .content(mapper.writeValueAsString(comment2))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -151,7 +145,7 @@ public class CommentControllerIntegrationTest {
     @Test
     public void givenComment_whenDeleteComment_thenStatusOk() throws Exception {
 
-        mockMvc.perform(delete("/commants/{key}", comment1.getKey())
+        mockMvc.perform(delete("/comments/{key}", comment1.getKey())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
@@ -159,7 +153,7 @@ public class CommentControllerIntegrationTest {
     @Test
     public void givenNoComment_whenDeleteComment_thenStatusNotFound() throws Exception {
 
-        mockMvc.perform(delete("/commants/{key}", comment1.getKey())
+        mockMvc.perform(delete("/comments/{key}", "0bb58513b1b57a7c7f8963f001f9896705b1ab2a22e320e4eb0ea2a985084fa")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
