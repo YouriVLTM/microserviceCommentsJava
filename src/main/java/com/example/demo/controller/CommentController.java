@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -20,16 +21,17 @@ public class CommentController {
         return commentRepository.findAll();
     }
 
-    @GetMapping("/comments/{title}")
-    public Comment getComment(@PathVariable String title)
-    {
-        return commentRepository.findByTitle(title);
+    @GetMapping("/comments/{key}")
+    public Comment getComment(@PathVariable String key)    {
+        return commentRepository.findByKey(key).get(0);
     }
 
     @PostMapping("/comments")
     Comment addComment(@RequestBody Comment newComment)
     {
-        //DOTO check if title exist
+        // create date and update date
+        newComment.setCreateDate(new Date(System.currentTimeMillis()));
+        newComment.setUpdateDate(new Date(System.currentTimeMillis()));
         commentRepository.save(newComment);
         return newComment;
     }
@@ -37,18 +39,20 @@ public class CommentController {
     @PutMapping("/comments")
     public Comment updateComment(@RequestBody Comment updateComment)
     {
-        Comment comment = commentRepository.findByTitle(updateComment.getTitle());
-        comment.setSubTitle(updateComment.getSubTitle());
+        Comment comment = commentRepository.findByKey(updateComment.getKey()).get(0);
+        comment.setTitle(updateComment.getTitle());
         comment.setDescription(updateComment.getDescription());
         comment.setUserEmail(updateComment.getUserEmail());
+        comment.setImageKey(updateComment.getImageKey());
+        comment.setUpdateDate(new Date(System.currentTimeMillis()));
         commentRepository.save(comment);
         return comment;
     }
 
-    @DeleteMapping("/comments/{title}")
-    public ResponseEntity<Object> deleteComment(@PathVariable String title)
+    @DeleteMapping("/comments/{key}")
+    public ResponseEntity<Object> deleteComment(@PathVariable String key)
     {
-        Comment comment = commentRepository.findByTitle(title);
+        Comment comment = commentRepository.findByKey(key).get(0);
         if(comment != null){
             commentRepository.delete(comment);
             return ResponseEntity.ok().build();
