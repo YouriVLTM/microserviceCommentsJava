@@ -37,7 +37,7 @@ jobs:
           java-version: 8
 
       - name: Maven clean and istall project
-        run: mvn -f pom.xml clean install -Dmaven.test.skip=true
+        run: mvn -f pom.xml clean install
 
       - name: Start MongoDB
         uses: supercharge/mongodb-github-action@1.3.0
