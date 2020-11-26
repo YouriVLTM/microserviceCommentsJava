@@ -38,11 +38,12 @@ public class CommentController {
 
     @PostMapping("/submit")
     public String submit() {
-        for (long i = 0; i < 100; i++) {
+        return "Ok";
+       /* for (long i = 0; i < 100; i++) {
             String id = UUID.randomUUID().toString();
             queueService.send(queueName, id);
         }
-        return "success";
+        return "success";*/
     }
 
 
