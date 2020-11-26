@@ -72,7 +72,7 @@ spec:
       containers:
         - name: comment-service-server
           image: yourivanlaer/comment-service-ex
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always #IfNotPresent
           ports:
             - name: http
               containerPort: 8053 # The port that the container exposes
