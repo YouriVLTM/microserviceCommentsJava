@@ -15,7 +15,7 @@ spec:
       containers:
         - name: web
           image: webcenter/activemq:5.14.3
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always #IfNotPresent
           ports:
             - containerPort: 61616
           resources:
