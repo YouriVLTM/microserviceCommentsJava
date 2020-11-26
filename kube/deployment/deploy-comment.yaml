@@ -87,3 +87,5 @@ spec:
               value: "27017"
             - name: SERVER_PORT
               value: "8053"
+            - name: ACTIVEMQ_BROKER_URL
+                value: "tcp://queue:61616"
