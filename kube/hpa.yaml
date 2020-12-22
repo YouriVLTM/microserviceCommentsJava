@@ -14,4 +14,4 @@ spec:
     - type: Pods
       pods:
         metricName: messages
-        targetAverageValue: 10
+        targetAverageValue: 20
