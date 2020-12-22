@@ -5,6 +5,7 @@ import com.example.demo.queue.QueueService;
 import com.example.demo.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,6 +46,18 @@ public class CommentController {
         return "success";
     }
 
+    @RequestMapping(value="/health")
+    public ResponseEntity health() {
+        HttpStatus status;
+        status = HttpStatus.OK;
+//        if (queueService.isUp()) {
+//
+//        } else {
+//            status = HttpStatus.BAD_REQUEST;
+//        }
+        return new ResponseEntity<>(status);
+    }
+
 
 /*Rest Controller*/
 
@@ -59,6 +72,12 @@ public class CommentController {
     @GetMapping("/comments/{key}")
     public Comment getComment(@PathVariable String key)    {
         return commentRepository.findByKey(key);
+    }
+
+
+    @GetMapping("/comments/images/{imageKey}")
+    public Comment getCommentFromImage(@PathVariable String imageKey)    {
+        return commentRepository.findByImageKey(imageKey);
     }
 
     @PostMapping("/comments")

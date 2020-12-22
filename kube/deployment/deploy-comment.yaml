@@ -76,6 +76,12 @@ spec:
           ports:
             - name: http
               containerPort: 8053 # The port that the container exposes
+          readinessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            httpGet:
+              path: /health
+              port: 8053
           resources:
             limits:
               cpu: 0.2

@@ -32,3 +32,5 @@ spec:
       targetPort: 61616
   selector:
     app: queue
+
+
