@@ -1,5 +1,4 @@
 package com.example.demo.controller;
-
 import com.example.demo.model.Comment;
 import com.example.demo.queue.QueueService;
 import com.example.demo.repository.CommentRepository;
@@ -46,17 +45,17 @@ public class CommentController {
         return "success";
     }
 
-    @RequestMapping(value="/health")
-    public ResponseEntity health() {
-        HttpStatus status;
-        status = HttpStatus.OK;
-//        if (queueService.isUp()) {
-//
-//        } else {
-//            status = HttpStatus.BAD_REQUEST;
-//        }
-        return new ResponseEntity<>(status);
-    }
+//    @RequestMapping(value="/health")
+//    public ResponseEntity health() {
+//        HttpStatus status;
+//        status = HttpStatus.OK;
+////        if (queueService.isUp()) {
+////
+////        } else {
+////            status = HttpStatus.BAD_REQUEST;
+////        }
+//        return new ResponseEntity<>(status);
+//    }
 
 
 /*Rest Controller*/
@@ -76,7 +75,7 @@ public class CommentController {
 
 
     @GetMapping("/comments/images/{imageKey}")
-    public Comment getCommentFromImage(@PathVariable String imageKey)    {
+    public List<Comment> getCommentFromImage(@PathVariable String imageKey)    {
         return commentRepository.findByImageKey(imageKey);
     }
 
@@ -105,6 +104,7 @@ public class CommentController {
         }else{
             return null;
         }
+
 
     }
 

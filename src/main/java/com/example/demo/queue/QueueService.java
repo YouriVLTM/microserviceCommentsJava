@@ -36,17 +36,6 @@ public class QueueService implements MessageListener {
         return jmsTemplate.browse(queueName, (s, qb) -> Collections.list(qb.getEnumeration()).size());
     }
 
-/*    public boolean isUp() {
-        var connection = jmsTemplate.getConnectionFactory();
-        try {
-            connection.createConnection().close();
-            return true;
-        } catch (JMSException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }*/
-
     @Override
     public void onMessage(Message message) {
         if (message instanceof ActiveMQTextMessage) {

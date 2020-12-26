@@ -10,7 +10,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -29,7 +31,7 @@ public class CommentControllerIntegrationTest {
             "Comment1",
             "Dat is mooi.",
             "youri@hotmail.com",
-            "test.png"
+            "test"
     );
 
     private Comment comment2 = new Comment(
@@ -81,10 +83,34 @@ public class CommentControllerIntegrationTest {
     @Test
     public void givenComment_whenGetComments_thenReturnJsonComments() throws Exception {
 
-        mockMvc.perform(get("/comments", this.comment1.getKey()))
+        mockMvc.perform(get("/comments"))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(5)))
+                .andExpect(jsonPath("$[0].title",is("Comment1")))
+                .andExpect(jsonPath("$[0].description",is("Dat is mooi.")))
+                .andExpect(jsonPath("$[0].userEmail",is("youri@hotmail.com")))
+                .andExpect(jsonPath("$[0].imageKey",is("test")))
+                .andExpect(jsonPath("$[1].title",is("Comment2")))
+                .andExpect(jsonPath("$[1].description",is("hallo ik ben youri")))
+                .andExpect(jsonPath("$[1].userEmail",is("lorenzo@hotmail.com")))
+                .andExpect(jsonPath("$[1].imageKey",is("urlimage")));
     }
+
+
+    @Test
+    public void givenComments_whenGetImageByKey_thenReturnJsonComments() throws Exception{
+
+        mockMvc.perform(get("/comments/images/{imageKey}", this.comment1.getImageKey()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].title", is("Comment1")))
+                .andExpect(jsonPath("$[0].description", is("Dat is mooi.")))
+                .andExpect(jsonPath("$[0].userEmail", is("youri@hotmail.com")));
+    }
+
+
 
 
     @Test
@@ -97,6 +123,7 @@ public class CommentControllerIntegrationTest {
                 .andExpect(jsonPath("$.description", is("Dat is mooi.")))
                 .andExpect(jsonPath("$.userEmail", is("youri@hotmail.com")));
     }
+
 
     @Test
     public void givenComment_whenPostComment_thenReturnJsonComment() throws Exception {
@@ -137,6 +164,23 @@ public class CommentControllerIntegrationTest {
     }
 
     @Test
+    public void giveCommentNull_whenPutComment_thenReturnNull() throws Exception {
+
+        Comment comment6 = new Comment(
+                "Comment6",
+                "",
+                "",
+                ""
+        );
+
+        mockMvc.perform(put("/comments")
+                .content(mapper.writeValueAsString(comment6))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").doesNotExist());
+    }
+
+    @Test
     public void givenComment_whenDeleteComment_thenStatusOk() throws Exception {
 
         mockMvc.perform(delete("/comments/{key}", comment1.getKey())
@@ -151,4 +195,24 @@ public class CommentControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
+
+
+
+    //QUEUE
+    @Test
+    public void whenGetMetric_thenGetStatusOk() throws  Exception{
+        mockMvc.perform(get("/metrics")
+                .contentType(MediaType.TEXT_PLAIN))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void whenPostMetric_thenReturnSucces() throws  Exception{
+        mockMvc.perform(post("/submit")
+                .contentType(MediaType.TEXT_PLAIN))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("success")));
+    }
+
+
 }
