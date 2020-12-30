@@ -110,6 +110,18 @@ public class CommentControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].userEmail", is("youri@hotmail.com")));
     }
 
+    @Test
+    public void givenComments_whenGetUserbyEmail_thenReturnJsonComments() throws Exception{
+
+        mockMvc.perform(get("/comments/users/{userEmail}", this.comment1.getUserEmail()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].title", is("Comment1")))
+                .andExpect(jsonPath("$[0].description", is("Dat is mooi.")))
+                .andExpect(jsonPath("$[0].userEmail", is("youri@hotmail.com")));
+    }
+
 
 
 

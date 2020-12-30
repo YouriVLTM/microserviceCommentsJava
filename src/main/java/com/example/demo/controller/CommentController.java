@@ -79,6 +79,11 @@ public class CommentController {
         return commentRepository.findByImageKey(imageKey);
     }
 
+    @GetMapping("/comments/users/{userEmail}")
+    public List<Comment> getCommentFromUser(@PathVariable String userEmail)    {
+        return commentRepository.findByUserEmail(userEmail);
+    }
+
     @PostMapping("/comments")
     Comment addComment(@RequestBody Comment newComment)
     {

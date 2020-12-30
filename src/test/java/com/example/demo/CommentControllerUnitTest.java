@@ -71,7 +71,7 @@ public class CommentControllerUnitTest {
                 .andExpect(jsonPath("$[1].imageKey",is("com2.png")));
     }
 
-     @Test
+    @Test
     public void givenComment_whenGetCommentByKey_thenReturnJsonComment() throws Exception{
          Comment comment1 = new Comment(
                  "Comment1",
@@ -90,6 +90,57 @@ public class CommentControllerUnitTest {
                 .andExpect(jsonPath("$.userEmail", is("com1@hotmail.com")))
                 .andExpect(jsonPath("$.imageKey", is("com1.png")));
     }
+
+    @Test
+    public void givenComment_whenGetImagesByKey_thenReturnJsonComment() throws Exception{
+        Comment comment1 = new Comment(
+                "Comment1",
+                "Dat is mooi.",
+                "com1@hotmail.com",
+                "com1.png"
+        );
+
+        List<Comment> comments = new ArrayList<>();
+        comments.add(comment1);
+
+        given(commentRepository.findByImageKey(comment1.getImageKey())).willReturn(comments);
+
+        mockMvc.perform(get("/comments/images/{imageKey}", comment1.getImageKey()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].title", is("Comment1")))
+                .andExpect(jsonPath("$[0].description", is("Dat is mooi.")))
+                .andExpect(jsonPath("$[0].userEmail", is("com1@hotmail.com")))
+                .andExpect(jsonPath("$[0].imageKey", is("com1.png")));
+
+    }
+
+    @Test
+    public void givenComment_whenGetUserByEmail_thenReturnJsonComment() throws Exception{
+        Comment comment1 = new Comment(
+                "Comment1",
+                "Dat is mooi.",
+                "com1@hotmail.com",
+                "com1.png"
+        );
+
+        List<Comment> comments = new ArrayList<>();
+        comments.add(comment1);
+
+        given(commentRepository.findByUserEmail(comment1.getUserEmail())).willReturn(comments);
+
+        mockMvc.perform(get("/comments/users/{userEmail}", comment1.getUserEmail()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].title", is("Comment1")))
+                .andExpect(jsonPath("$[0].description", is("Dat is mooi.")))
+                .andExpect(jsonPath("$[0].userEmail", is("com1@hotmail.com")))
+                .andExpect(jsonPath("$[0].imageKey", is("com1.png")));
+
+    }
+
 
    @Test
     public void givenComment_whenPostComment_thenReturnJsonComment() throws Exception {

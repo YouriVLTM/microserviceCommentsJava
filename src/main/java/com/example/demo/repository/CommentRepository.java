@@ -12,4 +12,5 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 public interface CommentRepository extends MongoRepository<Comment, String> {
     Comment findByKey(@Param("key") String key);
     List<Comment> findByImageKey(@Param("imageKey") String imageKey);
+    List<Comment> findByUserEmail(@Param("userEmail") String userEmail);
 }
